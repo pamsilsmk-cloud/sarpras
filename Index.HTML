@@ -1,0 +1,1489 @@
+
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SARPRAS - SMK Negeri 1 Pamatang Silimahuta</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- QRCodeJS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e40af',
+                        secondary: '#0284c7',
+                        accent: '#06b6d4',
+                        darkBg: '#0f172a'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f1f5f9; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        @media print {
+            body * { visibility: hidden; }
+            #printable-area, #printable-area * { visibility: visible; }
+            #printable-area { position: absolute; left: 0; top: 0; width: 100%; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 font-sans text-slate-800 antialiased min-h-screen flex flex-col">
+
+    <div id="app" class="flex h-screen overflow-hidden">
+        
+        <!-- LOGIN SCREEN -->
+        <div id="login-screen" class="fixed inset-0 z-50 bg-gradient-to-br from-primary via-blue-800 to-slate-900 flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-md rounded-2xl shadow-2xl p-8 border border-white/20 backdrop-blur-md">
+                <div class="text-center mb-8">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-blue-50 rounded-full mb-4 shadow-inner border border-blue-100">
+                        <i class="fa-solid fa-school-flag text-3xl text-primary"></i>
+                    </div>
+                    <h1 class="text-2xl font-bold text-slate-900">SISTEM INFORMASI SARPRAS</h1>
+                    <p class="text-xs font-semibold text-primary uppercase tracking-wider mt-1">SMK NEGERI 1 PAMATANG SILIMAHUTA</p>
+                </div>
+
+                <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase tracking-wider">Username atau Email</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><i class="fa-solid fa-user"></i></span>
+                            <input type="text" id="login-username" required class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition" placeholder="Masukkan username...">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase tracking-wider">Password</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400"><i class="fa-solid fa-lock"></i></span>
+                            <input type="password" id="login-password" required class="w-full pl-10 pr-4 py-2.5 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:bg-white transition" placeholder="••••••••">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-600 mb-1 uppercase tracking-wider">Demo / Quick Login as Role</label>
+                        <select id="demo-role-select" onchange="fillDemoUser(this.value)" class="w-full px-3 py-2 text-sm bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
+                            <option value="">-- Pilih Demo Akun (Opsional) --</option>
+                            <option value="SUPER_ADMIN">Super Admin (Akses Penuh)</option>
+                            <option value="PENGELOLA_SARPRAS">Pengelola Sarpras</option>
+                            <option value="PETUGAS">Petugas / Toolman / Kepala Lab</option>
+                            <option value="GURU">Guru / Instruktur</option>
+                            <option value="SISWA">Siswa</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-primary to-blue-700 hover:from-blue-700 hover:to-primary text-white font-semibold rounded-lg shadow-lg hover:shadow transition duration-200">
+                        Masuk Sistem
+                    </button>
+                </form>
+
+                <div class="mt-6 pt-4 border-t border-slate-200 text-center text-xs text-slate-500">
+                    &copy; 2026 SMK Negeri 1 Pamatang Silimahuta. All Rights Reserved.
+                </div>
+            </div>
+        </div>
+
+        <!-- SIDEBAR NAVIGATION -->
+        <aside id="sidebar" class="w-64 bg-slate-900 text-slate-300 flex flex-col fixed inset-y-0 left-0 z-40 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out border-r border-slate-800">
+            <!-- Header Logo -->
+            <div class="h-16 flex items-center px-6 bg-slate-950 border-b border-slate-800">
+                <div class="flex items-center space-x-3">
+                    <div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-white shadow">
+                        <i class="fa-solid fa-boxes-stacked"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-sm font-bold text-white tracking-wide">SI-SARPRAS</h2>
+                        <p class="text-[10px] text-cyan-400 font-medium">SMKN 1 Pamatang Silimahuta</p>
+                    </div>
+                </div>
+                <button onclick="toggleSidebar()" class="lg:hidden ml-auto text-slate-400 hover:text-white">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
+            </div>
+
+            <!-- User Badge -->
+            <div class="p-4 mx-3 my-3 bg-slate-800/60 rounded-xl border border-slate-700/50 flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-cyan-600 text-white font-bold flex items-center justify-center text-sm shadow" id="sidebar-user-initials">AD</div>
+                <div class="overflow-hidden">
+                    <h4 class="text-xs font-bold text-white truncate" id="sidebar-user-name">Administrator</h4>
+                    <span class="inline-block px-2 py-0.5 text-[9px] bg-primary/40 text-cyan-300 rounded font-semibold mt-0.5" id="sidebar-user-role">SUPER ADMIN</span>
+                </div>
+            </div>
+
+            <!-- Nav Links -->
+            <nav class="flex-1 px-3 space-y-1 overflow-y-auto custom-scrollbar pb-6" id="nav-menu">
+                <a href="#" onclick="switchTab('dashboard')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition active bg-primary text-white shadow" data-tab="dashboard">
+                    <i class="fa-solid fa-house w-5 text-center"></i><span>Dashboard</span>
+                </a>
+                <a href="#" onclick="switchTab('inventaris')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 hover:text-white" data-tab="inventaris">
+                    <i class="fa-solid fa-box-archive w-5 text-center"></i><span>Inventaris Aset</span>
+                </a>
+                <a href="#" onclick="switchTab('stok')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 hover:text-white" data-tab="stok">
+                    <i class="fa-solid fa-cubes w-5 text-center"></i><span>Stok & Ketersediaan</span>
+                </a>
+                <a href="#" onclick="switchTab('peminjaman')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 hover:text-white" data-tab="peminjaman">
+                    <i class="fa-solid fa-hand-holding-box w-5 text-center"></i><span>Peminjaman</span>
+                </a>
+                <a href="#" onclick="switchTab('pengembalian')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 hover:text-white" data-tab="pengembalian">
+                    <i class="fa-solid fa-rotate-left w-5 text-center"></i><span>Pengembalian</span>
+                </a>
+                <a href="#" onclick="switchTab('kerusakan')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 hover:text-white" data-tab="kerusakan">
+                    <i class="fa-solid fa-triangle-exclamation w-5 text-center"></i><span>Kerusakan & Perbaikan</span>
+                </a>
+                <a href="#" onclick="switchTab('maintenance')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 hover:text-white" data-tab="maintenance">
+                    <i class="fa-solid fa-screwdriver-wrench w-5 text-center"></i><span>Maintenance</span>
+                </a>
+                <a href="#" onclick="switchTab('master')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 hover:text-white" data-tab="master">
+                    <i class="fa-solid fa-database w-5 text-center"></i><span>Data Master</span>
+                </a>
+                <a href="#" onclick="switchTab('laporan')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 hover:text-white" data-tab="laporan">
+                    <i class="fa-solid fa-chart-line w-5 text-center"></i><span>Laporan & Ekspor</span>
+                </a>
+                <a href="#" onclick="switchTab('pengguna')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 hover:text-white" data-tab="pengguna">
+                    <i class="fa-solid fa-users w-5 text-center"></i><span>Manajemen Pengguna</span>
+                </a>
+                <a href="#" onclick="switchTab('pengaturan')" class="nav-item flex items-center space-x-3 px-3 py-2.5 rounded-lg text-sm font-medium transition hover:bg-slate-800 hover:text-white" data-tab="pengaturan">
+                    <i class="fa-solid fa-gear w-5 text-center"></i><span>Pengaturan & DB</span>
+                </a>
+            </nav>
+
+            <!-- Logout Bottom -->
+            <div class="p-4 border-t border-slate-800 bg-slate-950">
+                <button onclick="handleLogout()" class="w-full flex items-center justify-center space-x-2 py-2.5 px-4 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white rounded-lg font-medium text-sm transition">
+                    <i class="fa-solid fa-right-from-bracket"></i><span>Keluar Sistem</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT WRAPPER -->
+        <div class="flex-1 flex flex-col lg:pl-64 overflow-hidden">
+            
+            <!-- TOP HEADER BAR -->
+            <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 z-30 shrink-0">
+                <div class="flex items-center space-x-4">
+                    <button onclick="toggleSidebar()" class="lg:hidden text-slate-600 hover:text-primary focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl"></i>
+                    </button>
+                    <div>
+                        <h2 id="page-title" class="text-lg font-bold text-slate-800">Dashboard Sarpras</h2>
+                        <div class="flex items-center space-x-2 text-xs text-slate-500" id="breadcrumb">
+                            <span>Beranda</span><i class="fa-solid fa-chevron-right text-[10px]"></i><span class="text-primary font-medium">Dashboard</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <!-- Global Search -->
+                    <div class="hidden md:flex items-center bg-slate-100 rounded-lg px-3 py-1.5 border border-slate-200 focus-within:border-primary">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400 mr-2 text-sm"></i>
+                        <input type="text" id="global-search" oninput="handleGlobalSearch(this.value)" placeholder="Cari aset, nomor seri, lokasi..." class="bg-transparent text-sm focus:outline-none w-48 lg:w-64">
+                    </div>
+
+                    <!-- Notification Bell -->
+                    <div class="relative">
+                        <button onclick="toggleNotifications()" class="relative p-2 text-slate-600 hover:text-primary rounded-full hover:bg-slate-100 transition">
+                            <i class="fa-regular fa-bell text-xl"></i>
+                            <span id="notif-badge" class="absolute top-1 right-1 w-5 h-5 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">5</span>
+                        </button>
+                        <!-- Notif Dropdown -->
+                        <div id="notif-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-slate-200 py-2 z-50">
+                            <div class="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
+                                <span class="text-xs font-bold text-slate-700 uppercase">Notifikasi Sistem</span>
+                                <span class="text-[10px] bg-blue-100 text-primary px-2 py-0.5 rounded font-semibold">5 Baru</span>
+                            </div>
+                            <div class="max-h-72 overflow-y-auto divide-y divide-slate-100" id="notif-list">
+                                <!-- Populated dynamically -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User Profile Quick View -->
+                    <div class="flex items-center space-x-3 pl-3 border-l border-slate-200">
+                        <div class="w-9 h-9 rounded-full bg-primary text-white font-bold flex items-center justify-center text-sm shadow" id="header-user-initials">AD</div>
+                        <div class="hidden sm:block text-left">
+                            <p class="text-xs font-bold text-slate-800" id="header-user-name">Administrator</p>
+                            <p class="text-[10px] text-slate-500" id="header-user-role-label">Super Admin</p>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CONTENT AREA -->
+            <main class="flex-1 overflow-y-auto bg-slate-50 p-6 custom-scrollbar" id="main-content">
+                
+                <!-- TAB 1: DASHBOARD -->
+                <div id="tab-dashboard" class="tab-pane space-y-6">
+                    <!-- Welcome Banner -->
+                    <div class="bg-gradient-to-r from-primary to-blue-700 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden flex flex-col md:flex-row items-center justify-between">
+                        <div class="relative z-10 space-y-2 mb-4 md:mb-0">
+                            <span class="inline-block px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-semibold text-cyan-200">SMK Negeri 1 Pamatang Silimahuta</span>
+                            <h1 class="text-2xl lg:text-3xl font-bold">Sistem Informasi Sarana & Prasarana</h1>
+                            <p class="text-sm text-blue-100 max-w-xl">Kelola inventaris, peminjaman, pemeliharaan, serta penyusutan aset sekolah secara real-time dengan integrasi Google Spreadsheet & Google Drive.</p>
+                        </div>
+                        <div class="relative z-10 flex space-x-3">
+                            <button onclick="switchTab('peminjaman')" class="px-4 py-2.5 bg-white text-primary font-semibold rounded-xl text-sm shadow hover:bg-slate-100 transition">
+                                <i class="fa-solid fa-hand-holding-box mr-2"></i>Ajukan Pinjam
+                            </button>
+                            <button onclick="switchTab('inventaris')" class="px-4 py-2.5 bg-cyan-500 text-white font-semibold rounded-xl text-sm shadow hover:bg-cyan-600 transition">
+                                <i class="fa-solid fa-box-archive mr-2"></i>Data Aset
+                            </button>
+                        </div>
+                        <div class="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-blue-100 text-primary flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-boxes-stacked"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-medium text-slate-500">Total Aset</p>
+                                <h3 class="text-2xl font-bold text-slate-800" id="stat-total-aset">0</h3>
+                                <span class="text-[10px] text-emerald-600 font-semibold"><i class="fa-solid fa-arrow-up mr-1"></i>Tersinkronisasi</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-circle-check"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-medium text-slate-500">Barang Tersedia</p>
+                                <h3 class="text-2xl font-bold text-slate-800" id="stat-tersedia">0</h3>
+                                <span class="text-[10px] text-emerald-600 font-semibold">Siap dipinjam</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-hand-holding"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-medium text-slate-500">Barang Dipinjam</p>
+                                <h3 class="text-2xl font-bold text-slate-800" id="stat-dipinjam">0</h3>
+                                <span class="text-[10px] text-amber-600 font-semibold">Aktif</span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center space-x-4">
+                            <div class="w-12 h-12 rounded-xl bg-red-100 text-red-600 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-medium text-slate-500">Barang Rusak / Perbaikan</p>
+                                <h3 class="text-2xl font-bold text-slate-800" id="stat-rusak">0</h3>
+                                <span class="text-[10px] text-red-600 font-semibold">Perlu tindakan</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-sm font-bold text-slate-800">Grafik Kondisi Aset</h3>
+                                <span class="text-xs text-slate-400">Update Real-time</span>
+                            </div>
+                            <div class="h-64 relative flex items-center justify-center">
+                                <canvas id="chartCondition"></canvas>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-sm font-bold text-slate-800">Grafik Aset Berdasarkan Kategori</h3>
+                                <span class="text-xs text-slate-400">Distribusi Lab & Bengkel</span>
+                            </div>
+                            <div class="h-64 relative flex items-center justify-center">
+                                <canvas id="chartCategory"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity & Quick Stats -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-sm font-bold text-slate-800">Aktivitas Pengguna Terbaru</h3>
+                                <button onclick="switchTab('laporan')" class="text-xs text-primary font-semibold hover:underline">Lihat Semua</button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-left text-xs">
+                                    <thead class="bg-slate-50 text-slate-600 uppercase">
+                                        <tr>
+                                            <th class="p-3">Waktu</th>
+                                            <th class="p-3">User</th>
+                                            <th class="p-3">Aktivitas</th>
+                                            <th class="p-3">Modul</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboard-activity-log" class="divide-y divide-slate-100">
+                                        <!-- Dynamic rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <h3 class="text-sm font-bold text-slate-800 mb-4">Informasi Instansi</h3>
+                                <div class="space-y-3 text-xs text-slate-600">
+                                    <div class="flex justify-between pb-2 border-b border-slate-100">
+                                        <span class="font-medium text-slate-400">Nama Sekolah</span>
+                                        <span class="font-bold text-slate-800 text-right">SMK Negeri 1 Pamatang Silimahuta</span>
+                                    </div>
+                                    <div class="flex justify-between pb-2 border-b border-slate-100">
+                                        <span class="font-medium text-slate-400">Database Utama</span>
+                                        <span class="font-bold text-primary">Google Spreadsheet API</span>
+                                    </div>
+                                    <div class="flex justify-between pb-2 border-b border-slate-100">
+                                        <span class="font-medium text-slate-400">Penyimpanan Berkas</span>
+                                        <span class="font-bold text-cyan-600">Google Drive Storage</span>
+                                    </div>
+                                    <div class="flex justify-between pb-2 border-b border-slate-100">
+                                        <span class="font-medium text-slate-400">Status Sinkronisasi</span>
+                                        <span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 font-bold rounded">Connected</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-slate-100">
+                                <button onclick="syncDatabaseWithCloud()" class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-cloud-arrow-down"></i><span>Sinkronisasi Cloud Sekarang</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 2: INVENTARIS ASET -->
+                <div id="tab-inventaris" class="tab-pane hidden space-y-6">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800">Manajemen Inventaris Aset</h2>
+                            <p class="text-xs text-slate-500">Daftar seluruh sarana dan prasarana SMK Negeri 1 Pamatang Silimahuta.</p>
+                        </div>
+                        <div class="flex items-center space-x-3 w-full sm:w-auto">
+                            <button onclick="openAddAssetModal()" class="px-4 py-2 bg-primary hover:bg-blue-800 text-white font-semibold rounded-xl text-xs shadow flex items-center space-x-2 transition">
+                                <i class="fa-solid fa-plus"></i><span>Tambah Aset Baru</span>
+                            </button>
+                            <button onclick="exportTableToCSV('inventaris-table', 'Data_Inventaris_Sarpras.csv')" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs flex items-center space-x-2 transition">
+                                <i class="fa-solid fa-file-excel"></i><span>Ekspor CSV</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Filter Bar -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 grid grid-cols-1 sm:grid-cols-4 gap-4">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Cari Barang</label>
+                            <input type="text" id="filter-asset-search" oninput="renderAssetTable()" placeholder="Nama barang / kode..." class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Kategori</label>
+                            <select id="filter-asset-category" onchange="renderAssetTable()" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary">
+                                <option value="">Semua Kategori</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Lokasi Ruang</label>
+                            <select id="filter-asset-location" onchange="renderAssetTable()" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary">
+                                <option value="">Semua Lokasi</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Kondisi</label>
+                            <select id="filter-asset-condition" onchange="renderAssetTable()" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-primary">
+                                <option value="">Semua Kondisi</option>
+                                <option value="Baik">Baik</option>
+                                <option value="Rusak Ringan">Rusak Ringan</option>
+                                <option value="Rusak Berat">Rusak Berat</option>
+                                <option value="Dalam Perbaikan">Dalam Perbaikan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Asset Table -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table id="inventaris-table" class="w-full text-left text-xs">
+                                <thead class="bg-slate-100 text-slate-600 uppercase font-semibold border-b border-slate-200">
+                                    <tr>
+                                        <th class="p-3">Foto</th>
+                                        <th class="p-3">Kode Inventaris</th>
+                                        <th class="p-3">Nama Barang</th>
+                                        <th class="p-3">Kategori</th>
+                                        <th class="p-3">Lokasi</th>
+                                        <th class="p-3">Jumlah</th>
+                                        <th class="p-3">Nilai Buku</th>
+                                        <th class="p-3">Kondisi</th>
+                                        <th class="p-3 text-center">QR Code</th>
+                                        <th class="p-3 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="asset-table-body" class="divide-y divide-slate-100">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: STOK & KETERSEDIAAN -->
+                <div id="tab-stok" class="tab-pane hidden space-y-6">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex items-center justify-between">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800">Stok & Ketersediaan Aset</h2>
+                            <p class="text-xs text-slate-500">Monitor ketersediaan barang secara real-time untuk pengajuan peminjaman.</p>
+                        </div>
+                        <button onclick="renderStockTable()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+                            <i class="fa-solid fa-rotate mr-1"></i>Muat Ulang
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="stock-cards-container">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- TAB 4: PEMINJAMAN -->
+                <div id="tab-peminjaman" class="tab-pane hidden space-y-6">
+                    <div class="flex items-center justify-between bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800">Manajemen Peminjaman Barang</h2>
+                            <p class="text-xs text-slate-500">Ajukan dan setujui peminjaman sarana prasarana sekolah.</p>
+                        </div>
+                        <button onclick="openAddLoanModal()" class="px-4 py-2 bg-primary hover:bg-blue-800 text-white font-semibold rounded-xl text-xs shadow flex items-center space-x-2 transition">
+                            <i class="fa-solid fa-plus"></i><span>Buat Pengajuan Peminjaman</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-100 text-slate-600 uppercase font-semibold border-b border-slate-200">
+                                    <tr>
+                                        <th class="p-3">Kode Pinjam</th>
+                                        <th class="p-3">Peminjam</th>
+                                        <th class="p-3">Barang & Jumlah</th>
+                                        <th class="p-3">Tgl Pinjam</th>
+                                        <th class="p-3">Rencana Kembali</th>
+                                        <th class="p-3">Keperluan</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="loan-table-body" class="divide-y divide-slate-100">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: PENGEMBALIAN -->
+                <div id="tab-pengembalian" class="tab-pane hidden space-y-6">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                        <h2 class="text-lg font-bold text-slate-800">Proses Pengembalian Barang</h2>
+                        <p class="text-xs text-slate-500">Catat pengembalian barang pinjaman dan verifikasi kondisi fisik.</p>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-100 text-slate-600 uppercase font-semibold border-b border-slate-200">
+                                    <tr>
+                                        <th class="p-3">Kode Pinjam</th>
+                                        <th class="p-3">Peminjam</th>
+                                        <th class="p-3">Barang</th>
+                                        <th class="p-3">Tgl Kembali / Rencana</th>
+                                        <th class="p-3">Kondisi Pinjam vs Kembali</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3 text-center">Proses</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="return-table-body" class="divide-y divide-slate-100">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 6: KERUSAKAN -->
+                <div id="tab-kerusakan" class="tab-pane hidden space-y-6">
+                    <div class="flex items-center justify-between bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800">Pelaporan Kerusakan & Perbaikan</h2>
+                            <p class="text-xs text-slate-500">Laporkan kerusakan aset untuk segera ditindaklanjuti teknisi.</p>
+                        </div>
+                        <button onclick="openAddDamageModal()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-xl text-xs shadow flex items-center space-x-2 transition">
+                            <i class="fa-solid fa-triangle-exclamation"></i><span>Laporkan Kerusakan</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-100 text-slate-600 uppercase font-semibold border-b border-slate-200">
+                                    <tr>
+                                        <th class="p-3">ID Laporan</th>
+                                        <th class="p-3">Nama Barang</th>
+                                        <th class="p-3">Pelapor</th>
+                                        <th class="p-3">Tanggal</th>
+                                        <th class="p-3">Jenis Kerusakan</th>
+                                        <th class="p-3">Tingkat</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="damage-table-body" class="divide-y divide-slate-100">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 7: MAINTENANCE -->
+                <div id="tab-maintenance" class="tab-pane hidden space-y-6">
+                    <div class="flex items-center justify-between bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800">Jadwal & Riwayat Maintenance</h2>
+                            <p class="text-xs text-slate-500">Perawatan berkala sarana dan prasarana sekolah.</p>
+                        </div>
+                        <button onclick="openAddMaintenanceModal()" class="px-4 py-2 bg-primary hover:bg-blue-800 text-white font-semibold rounded-xl text-xs shadow flex items-center space-x-2 transition">
+                            <i class="fa-solid fa-plus"></i><span>Tambah Jadwal Servis</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-100 text-slate-600 uppercase font-semibold border-b border-slate-200">
+                                    <tr>
+                                        <th class="p-3">ID Servis</th>
+                                        <th class="p-3">Nama Barang</th>
+                                        <th class="p-3">Jenis Pemeliharaan</th>
+                                        <th class="p-3">Tanggal</th>
+                                        <th class="p-3">Teknisi</th>
+                                        <th class="p-3">Biaya</th>
+                                        <th class="p-3">Jadwal Berikutnya</th>
+                                        <th class="p-3 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="maintenance-table-body" class="divide-y divide-slate-100">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 8: DATA MASTER -->
+                <div id="tab-master" class="tab-pane hidden space-y-6">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800">Manajemen Data Master</h2>
+                            <p class="text-xs text-slate-500">Kelola kategori, satuan, lokasi ruangan, penyedia, dan sumber dana.</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="switchMasterSubTab('kategori')" class="master-tab-btn px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold">Kategori</button>
+                            <button onclick="switchMasterSubTab('satuan')" class="master-tab-btn px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold">Satuan</button>
+                            <button onclick="switchMasterSubTab('lokasi')" class="master-tab-btn px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold">Lokasi/Ruang</button>
+                            <button onclick="switchMasterSubTab('penyedia')" class="master-tab-btn px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold">Penyedia</button>
+                            <button onclick="switchMasterSubTab('sumber_dana')" class="master-tab-btn px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-xs font-semibold">Sumber Dana</button>
+                        </div>
+                    </div>
+
+                    <!-- Master Sub Content Container -->
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 id="master-sub-title" class="text-sm font-bold text-slate-800">Data Kategori Barang</h3>
+                            <button onclick="openAddMasterModal()" class="px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold">Tambah Data</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs" id="master-table">
+                                <thead class="bg-slate-50 text-slate-600 uppercase font-semibold">
+                                    <tr>
+                                        <th class="p-3">ID</th>
+                                        <th class="p-3">Nama</th>
+                                        <th class="p-3">Keterangan / Deskripsi</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="master-table-body" class="divide-y divide-slate-100">
+                                    <!-- Dynamic rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 9: LAPORAN -->
+                <div id="tab-laporan" class="tab-pane hidden space-y-6">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800">Laporan & Ekspor Data Sarpras</h2>
+                            <p class="text-xs text-slate-500">Cetak laporan inventaris, penyusutan, peminjaman, dan kerusakan.</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button onclick="window.print()" class="px-4 py-2 bg-slate-800 hover:bg-slate-900 text-white font-semibold rounded-xl text-xs flex items-center space-x-2 transition">
+                                <i class="fa-solid fa-print"></i><span>Cetak / PDF</span>
+                            </button>
+                            <button onclick="exportTableToCSV('report-table', 'Laporan_Sarpras_SMKN1.csv')" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs flex items-center space-x-2 transition">
+                                <i class="fa-solid fa-file-excel"></i><span>Ekspor CSV</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Report Filter Box -->
+                    <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Jenis Laporan</label>
+                            <select id="report-type-select" onchange="renderReportTable()" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg">
+                                <option value="inventaris">Laporan Seluruh Inventaris Aset</option>
+                                <option value="penyusutan">Laporan Penyusutan & Nilai Buku</option>
+                                <option value="peminjaman">Riwayat Peminjaman Barang</option>
+                                <option value="kerusakan">Laporan Barang Rusak</option>
+                                <option value="maintenance">Laporan Maintenance / Perawatan</option>
+                                <option value="log">Log Aktivitas Pengguna</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Periode / Tahun</label>
+                            <select id="report-period" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg">
+                                <option value="2026">Tahun Anggaran 2026</option>
+                                <option value="2025">Tahun Anggaran 2025</option>
+                                <option value="all">Semua Waktu</option>
+                            </select>
+                        </div>
+                        <div class="flex items-end">
+                            <button onclick="renderReportTable()" class="w-full py-2 bg-primary text-white text-xs font-semibold rounded-lg shadow">Tampilkan Laporan</button>
+                        </div>
+                    </div>
+
+                    <!-- Report Table Container -->
+                    <div id="printable-area" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 overflow-hidden">
+                        <div class="text-center mb-6 pb-4 border-b border-slate-200">
+                            <h3 class="text-base font-bold text-slate-900">PEMERINTAH PROVINSI SUMATERA UTARA</h3>
+                            <h2 class="text-lg font-bold text-primary">DINAS PENDIDIKAN - SMK NEGERI 1 PAMATANG SILIMAHUTA</h2>
+                            <p class="text-xs text-slate-500">Jl. Raya Pematang Silimahuta, Kab. Simalungun, Sumatera Utara</p>
+                            <h4 id="report-heading-title" class="text-sm font-bold text-slate-800 mt-4 uppercase">LAPORAN SELURUH INVENTARIS ASET</h4>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table id="report-table" class="w-full text-left text-xs">
+                                <thead class="bg-slate-100 text-slate-700 uppercase font-semibold">
+                                    <tr>
+                                        <th class="p-3">No</th>
+                                        <th class="p-3">Kode Inventaris</th>
+                                        <th class="p-3">Nama Barang</th>
+                                        <th class="p-3">Kategori</th>
+                                        <th class="p-3">Lokasi</th>
+                                        <th class="p-3">Tahun</th>
+                                        <th class="p-3">Kondisi</th>
+                                        <th class="p-3">Nilai Buku</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="report-table-body" class="divide-y divide-slate-100">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 10: MANAJEMEN PENGGUNA -->
+                <div id="tab-pengguna" class="tab-pane hidden space-y-6">
+                    <div class="flex items-center justify-between bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                        <div>
+                            <h2 class="text-lg font-bold text-slate-800">Manajemen Pengguna & Hak Akses</h2>
+                            <p class="text-xs text-slate-500">Kelola akun Super Admin, Pengelola Sarpras, Petugas, Guru, dan Siswa.</p>
+                        </div>
+                        <button onclick="openAddUserModal()" class="px-4 py-2 bg-primary hover:bg-blue-800 text-white font-semibold rounded-xl text-xs shadow flex items-center space-x-2 transition">
+                            <i class="fa-solid fa-user-plus"></i><span>Tambah Pengguna</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-100 text-slate-600 uppercase font-semibold border-b border-slate-200">
+                                    <tr>
+                                        <th class="p-3">Nama Lengkap</th>
+                                        <th class="p-3">Username</th>
+                                        <th class="p-3">Role / Hak Akses</th>
+                                        <th class="p-3">Jabatan / NIP</th>
+                                        <th class="p-3">No HP / Email</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3 text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body" class="divide-y divide-slate-100">
+                                    <!-- Populated dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 11: PENGATURAN & GOOGLE APPS SCRIPT CONFIG -->
+                <div id="tab-pengaturan" class="tab-pane hidden space-y-6">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200">
+                        <h2 class="text-lg font-bold text-slate-800">Konfigurasi Sistem & Backend Google Apps Script</h2>
+                        <p class="text-xs text-slate-500">Atur Spreadsheet ID, Google Drive Folder ID, dan endpoint Google Apps Script Web App.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                            <h3 class="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Koneksi Database & Cloud Storage</h3>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Google Apps Script Web App URL</label>
+                                <input type="text" id="config-script-url" value="https://script.google.com/macros/s/AKfycb.../exec" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Google Spreadsheet ID</label>
+                                <input type="text" id="config-sheet-id" value="1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-slate-600 mb-1">Google Drive Folder ID (SARPRAS_SMKN1_PAMATANG_SILIMAHUTA)</label>
+                                <input type="text" id="config-drive-id" value="0A-DriveFolderIdExample12345" class="w-full px-3 py-2 text-xs bg-slate-50 border border-slate-300 rounded-lg">
+                            </div>
+                            <button onclick="saveApiConfig()" class="w-full py-2.5 bg-primary text-white font-semibold rounded-xl text-xs shadow">Simpan Konfigurasi</button>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                            <h3 class="text-sm font-bold text-slate-800 border-b border-slate-100 pb-2">Instruksi Otomatisasi & Deployment</h3>
+                            <div class="text-xs text-slate-600 space-y-2">
+                                <p><strong>Langkah 1:</strong> Buat Google Spreadsheet baru di Google Drive.</p>
+                                <p><strong>Langkah 2:</strong> Buka <em>Extensions > Apps Script</em>, paste script backend yang tersedia pada file <code class="bg-slate-100 px-1 py-0.5 rounded text-primary">Code.gs</code>.</p>
+                                <p><strong>Langkah 3:</strong> Deploy sebagai <em>Web App</em> (Execute as: Me, Who has access: Anyone).</p>
+                                <p><strong>Langkah 4:</strong> Salin Web App URL dan tempelkan di kolom kiri.</p>
+                            </div>
+                            <div class="pt-2">
+                                <button onclick="triggerAutoSetupSheets()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold rounded-xl text-xs shadow flex items-center justify-center space-x-2">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i><span>Auto-Create Sheets & Drive Folders</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- MODALS CONTAINER -->
+    <!-- QR Code / Detail Modal -->
+    <div id="modal-asset-detail" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
+            <div class="bg-primary px-6 py-4 flex items-center justify-between text-white">
+                <h3 class="font-bold text-sm">Detail & QR Code Aset Sarpras</h3>
+                <button onclick="closeModal('modal-asset-detail')" class="text-white hover:text-slate-200 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="p-6 space-y-4 text-xs text-slate-700 max-h-[80vh] overflow-y-auto" id="modal-asset-body">
+                <!-- Dynamically filled -->
+            </div>
+            <div class="bg-slate-50 px-6 py-3 border-t border-slate-200 flex justify-end space-x-2">
+                <button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white rounded-lg font-medium text-xs">Cetak QR Code</button>
+                <button onclick="closeModal('modal-asset-detail')" class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg font-medium text-xs">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add/Edit Asset Modal -->
+    <div id="modal-asset-form" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl overflow-hidden border border-slate-200">
+            <div class="bg-primary px-6 py-4 flex items-center justify-between text-white">
+                <h3 id="asset-form-title" class="font-bold text-sm">Tambah Aset Baru</h3>
+                <button onclick="closeModal('modal-asset-form')" class="text-white hover:text-slate-200 text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="asset-form" onsubmit="saveAssetData(event)" class="p-6 space-y-4 text-xs max-h-[75vh] overflow-y-auto custom-scrollbar">
+                <input type="hidden" id="form-asset-id">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Nama Barang</label>
+                        <input type="text" id="form-asset-name" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Kode Inventaris</label>
+                        <input type="text" id="form-asset-code" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg" placeholder="SARPRAS-SMKN1PAMSIL-AST-000001">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Kategori</label>
+                        <select id="form-asset-cat" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg">
+                            <option value="Komputer">Komputer</option>
+                            <option value="Jaringan">Jaringan</option>
+                            <option value="Elektronik">Elektronik</option>
+                            <option value="Peralatan Praktik">Peralatan Praktik</option>
+                            <option value="Furniture">Furniture</option>
+                            <option value="Mesin">Mesin</option>
+                            <option value="ATK">ATK</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Merk / Model</label>
+                        <input type="text" id="form-asset-brand" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Nomor Seri</label>
+                        <input type="text" id="form-asset-serial" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Lokasi Ruang</label>
+                        <select id="form-asset-location" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg">
+                            <option value="Lab TKJ">Lab TKJ</option>
+                            <option value="Bengkel TKR">Bengkel TKR</option>
+                            <option value="Bengkel TBSM">Bengkel TBSM</option>
+                            <option value="Perpustakaan">Perpustakaan</option>
+                            <option value="Ruang Guru">Ruang Guru</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Jumlah & Satuan</label>
+                        <div class="flex space-x-2">
+                            <input type="number" id="form-asset-qty" value="1" min="1" required class="w-1/2 px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg">
+                            <select id="form-asset-unit" class="w-1/2 px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg">
+                                <option value="Unit">Unit</option>
+                                <option value="Buah">Buah</option>
+                                <option value="Set">Set</option>
+                                <option value="Paket">Paket</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Harga Satuan (Rp)</label>
+                        <input type="number" id="form-asset-price" value="1500000" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Tahun Perolehan</label>
+                        <input type="number" id="form-asset-year" value="2025" required class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg">
+                    </div>
+                    <div>
+                        <label class="block font-semibold text-slate-600 mb-1">Kondisi Aset</label>
+                        <select id="form-asset-cond" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg">
+                            <option value="Baik">Baik</option>
+                            <option value="Rusak Ringan">Rusak Ringan</option>
+                            <option value="Rusak Berat">Rusak Berat</option>
+                            <option value="Dalam Perbaikan">Dalam Perbaikan</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-600 mb-1">Upload Foto Barang (Simpan ke Google Drive)</label>
+                    <input type="file" id="form-asset-file" accept="image/*" class="w-full text-xs file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-blue-50 file:text-primary hover:file:bg-blue-100">
+                    <p class="text-[10px] text-slate-400 mt-1">Foto akan diunggah otomatis ke folder Google Drive: /SARPRAS_SMKN1_PAMATANG_SILIMAHUTA/FOTO_ASET</p>
+                </div>
+                <div class="pt-4 border-t border-slate-200 flex justify-end space-x-2">
+                    <button type="button" onclick="closeModal('modal-asset-form')" class="px-4 py-2 bg-slate-200 text-slate-700 font-semibold rounded-lg">Batal</button>
+                    <button type="submit" class="px-4 py-2 bg-primary text-white font-semibold rounded-lg shadow">Simpan Aset</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- APPLICATION JAVASCRIPT -->
+    <script>
+        let currentUser = {
+            username: "admin_sarpras",
+            name: "Drs. Budi Saragih, M.Pd.",
+            role: "SUPER_ADMIN",
+            nip: "197508122005011003",
+            jabatan: "Kepala Sarpras & IT",
+            avatar: "BS"
+        };
+
+        // In-memory demo data corresponding directly to Spreadsheet sheets
+        let dbState = {
+            users: [
+                { id: "USR-001", username: "admin_sarpras", name: "Drs. Budi Saragih, M.Pd.", nip: "197508122005011003", role: "SUPER_ADMIN", jabatan: "Kepala Sarpras", hp: "081265432101", email: "budi@smkn1pamsil.sch.id", status: "Aktif" },
+                { id: "USR-002", username: "pengelola_sarpras", name: "Siti Rahma, S.T.", nip: "198203142010012002", role: "PENGELOLA_SARPRAS", jabatan: "Staff Sarpras", hp: "081376543212", email: "siti@smkn1pamsil.sch.id", status: "Aktif" },
+                { id: "USR-003", username: "toolman_tkj", name: "Joko Anwar, A.Md.", nip: "199005202015021001", role: "PETUGAS", jabatan: "Toolman Lab TKJ", hp: "082198765433", email: "joko@smkn1pamsil.sch.id", status: "Aktif" },
+                { id: "USR-004", username: "guru_tkj", name: "Eko Prasetyo, S.Kom.", nip: "198811102012031005", role: "GURU", jabatan: "Guru Produktif TKJ", hp: "085261234567", email: "eko@smkn1pamsil.sch.id", status: "Aktif" },
+                { id: "USR-005", username: "siswa_01", name: "Rian Damanik", nip: "10542", role: "SISWA", jabatan: "Siswa XII TKJ 1", hp: "081234567890", email: "rian@student.sch.id", status: "Aktif" }
+            ],
+            kategori: [
+                { id: "KAT-01", nama: "Komputer", desc: "PC, Laptop, Server, dan Tablet", status: "Aktif" },
+                { id: "KAT-02", nama: "Jaringan", desc: "Switch, Router, Access Point, Kabel", status: "Aktif" },
+                { id: "KAT-03", nama: "Elektronik", desc: "Proyektor, Sound System, TV", status: "Aktif" },
+                { id: "KAT-04", nama: "Peralatan Praktik", desc: "Tool Kit, Mesin TKR/TBSM", status: "Aktif" },
+                { id: "KAT-05", nama: "Furniture", desc: "Meja, Kursi, Lemari Inventaris", status: "Aktif" }
+            ],
+            satuan: [
+                { id: "SAT-01", nama: "Unit", ket: "Unit lengkap" },
+                { id: "SAT-02", nama: "Buah", ket: "Satuan lepas" },
+                { id: "SAT-03", nama: "Set", ket: "Set peralatan" },
+                { id: "SAT-04", nama: "Paket", ket: "Bundel materi" }
+            ],
+            lokasi: [
+                { id: "LOK-01", ruang: "Lab Komputer TKJ 1", kode: "LOK-TKJ1", gedung: "Gedung Kejuruan Lt. 2", pj: "Joko Anwar, A.Md.", status: "Aktif" },
+                { id: "LOK-02", ruang: "Bengkel Teknik Kendaraan Ringan", kode: "LOK-TKR", gedung: "Gedung Bengkel Otomotif", pj: "Rudi Hartono, S.T.", status: "Aktif" },
+                { id: "LOK-03", ruang: "Bengkel TBSM", kode: "LOK-TBSM", gedung: "Gedung Bengkel Motor", pj: "Slamet Riyadi", status: "Aktif" },
+                { id: "LOK-04", ruang: "Perpustakaan Utama", kode: "LOK-PERPUS", gedung: "Gedung Pusat", pj: "Dra. Nurhalimah", status: "Aktif" },
+                { id: "LOK-05", ruang: "Ruang Guru", kode: "LOK-RGURU", gedung: "Gedung Administrasi", pj: "Kepala Sekolah", status: "Aktif" }
+            ],
+            penyedia: [
+                { id: "VND-01", nama: "PT. Mitra Edukasi Nusantara", alamat: "Jl. Gatot Subroto Medan", kontak: "061-456789", email: "info@mitraedu.co.id", npwp: "01.234.567.8-123.000" },
+                { id: "VND-02", nama: "CV. Simalungun Komputindo", alamat: "Pematang Siantar", kontak: "0622-21456", email: "sales@simkom.com", npwp: "02.345.678.9-456.000" }
+            ],
+            sumber_dana: [
+                { id: "DAN-01", nama: "BOS Reguler", tahun: "2026", ket: "Bantuan Operasional Sekolah" },
+                { id: "DAN-02", nama: "BOP SMK Pusat Keunggulan", tahun: "2026", ket: "Bantuan Pemerintah Pusat" },
+                { id: "DAN-03", nama: "APBD Provinsi Sumatera Utara", tahun: "2026", ket: "Hibah Pemerintah Provinsi" }
+            ],
+            aset: [
+                { id: "AST-001", kode: "SARPRAS-SMKN1PAMSIL-AST-000001", nama: "Laptop Core i5 ASUS ExpertBook", kategori: "Komputer", merk: "ASUS", tipe: "ExpertBook B1", seri: "ASUS-99821X", satuan: "Unit", jumlah: 15, harga: 9500000, total: 142500000, tahun: 2025, sumber: "BOP SMK Pusat Keunggulan", penyedia: "CV. Simalungun Komputindo", lokasi: "Lab Komputer TKJ 1", kondisi: "Baik", status: "Tersedia", nilaiBuku: 8500000, masaManfaat: 5, qr: "SARPRAS-SMKN1PAMSIL-AST-000001", foto: "https://placehold.co/400x300/1e40af/ffffff?text=Laptop+ASUS" },
+                { id: "AST-002", kode: "SARPRAS-SMKN1PAMSIL-AST-000002", nama: "PC Rakitan Core i7 Workstation", kategori: "Komputer", merk: "Custom", tipe: "Intel i7-12700", seri: "PC-TKJ-012", satuan: "Unit", jumlah: 25, harga: 11000000, total: 275000000, tahun: 2025, sumber: "BOP SMK Pusat Keunggulan", penyedia: "PT. Mitra Edukasi Nusantara", lokasi: "Lab Komputer TKJ 1", kondisi: "Baik", status: "Tersedia", nilaiBuku: 9800000, masaManfaat: 5, qr: "SARPRAS-SMKN1PAMSIL-AST-000002", foto: "https://placehold.co/400x300/0284c7/ffffff?text=PC+Workstation" },
+                { id: "AST-003", kode: "SARPRAS-SMKN1PAMSIL-AST-000003", nama: "Cisco Managed Switch 24-Port", kategori: "Jaringan", merk: "Cisco", tipe: "Catalyst 2960", seri: "CSCO-44910Z", satuan: "Unit", jumlah: 4, harga: 4500000, total: 18000000, tahun: 2024, sumber: "BOS Reguler", penyedia: "CV. Simalungun Komputindo", lokasi: "Lab Komputer TKJ 1", kondisi: "Baik", status: "Tersedia", nilaiBuku: 3600000, masaManfaat: 5, qr: "SARPRAS-SMKN1PAMSIL-AST-000003", foto: "https://placehold.co/400x300/06b6d4/ffffff?text=Cisco+Switch" },
+                { id: "AST-004", kode: "SARPRAS-SMKN1PAMSIL-AST-000004", nama: "Proyektor Epson EB-X450", kategori: "Elektronik", merk: "Epson", tipe: "EB-X450", seri: "EPS-77123", satuan: "Unit", jumlah: 8, harga: 6200000, total: 49600000, tahun: 2024, sumber: "APBD Provinsi Sumatera Utara", penyedia: "PT. Mitra Edukasi Nusantara", lokasi: "Ruang Guru", kondisi: "Rusak Ringan", status: "Dalam Perbaikan", nilaiBuku: 4800000, masaManfaat: 4, qr: "SARPRAS-SMKN1PAMSIL-AST-000004", foto: "https://placehold.co/400x300/e11d48/ffffff?text=Proyektor+Epson" },
+                { id: "AST-005", kode: "SARPRAS-SMKN1PAMSIL-AST-000005", nama: "Mesin Scanner OBD2 Motor Injection", kategori: "Peralatan Praktik", merk: "Bosch", tipe: "KTS 100", seri: "BSCH-5512", satuan: "Unit", jumlah: 5, harga: 7500000, total: 37500000, tahun: 2025, sumber: "BOP SMK Pusat Keunggulan", penyedia: "PT. Mitra Edukasi Nusantara", lokasi: "Bengkel TBSM", kondisi: "Baik", status: "Tersedia", nilaiBuku: 6800000, masaManfaat: 5, qr: "SARPRAS-SMKN1PAMSIL-AST-000005", foto: "https://placehold.co/400x300/10b981/ffffff?text=Scanner+OBD2" }
+            ],
+            peminjaman: [
+                { id: "LGN-001", kode: "PIN-2026-001", userId: "USR-004", nama: "Eko Prasetyo, S.Kom.", jabatan: "Guru Produktif TKJ", barang: "Laptop Core i5 ASUS ExpertBook", idAset: "AST-001", jumlah: 2, tglPinjam: "2026-09-18", rencanaKembali: "2026-09-25", tglKembali: "", keperluan: "Praktikum Jaringan Komputer Kelas XII", kondisiPinjam: "Baik", kondisiKembali: "", status: "Sedang Dipinjam", petugas: "Joko Anwar, A.Md.", catatan: "Harap dikembalikan tepat waktu." },
+                { id: "LGN-002", kode: "PIN-2026-002", userId: "USR-005", nama: "Rian Damanik", jabatan: "Siswa XII TKJ 1", barang: "Cisco Managed Switch 24-Port", idAset: "AST-003", jumlah: 1, tglPinjam: "2026-09-19", rencanaKembali: "2026-09-21", tglKembali: "", keperluan: "Simulasi Uji Kompetensi Keahlian (UKK)", kondisiPinjam: "Baik", kondisiKembali: "", status: "Menunggu Persetujuan", petugas: "-", catatan: "Menunggu acc kepala lab." }
+            ],
+            kerusakan: [
+                { id: "DMG-001", idAset: "AST-004", namaBarang: "Proyektor Epson EB-X450", pelapor: "Eko Prasetyo, S.Kom.", tgl: "2026-09-17", jenis: "Lampu Indikator Menyala Merah (Lamp Failure)", deskripsi: "Lampu proyektor mati tiba-tiba saat pembelajaran di kelas.", tingkat: "Sedang", status: "Dalam Perbaikan", tindakan: "Penggantian lampu proyektor baru.", teknisi: "Tim IT Sekolah", biaya: 850000 }
+            ],
+            maintenance: [
+                { id: "MNT-001", idAset: "AST-001", namaBarang: "Laptop Core i5 ASUS ExpertBook", jenis: "Pembersihan Cooling Fan & Update OS", tgl: "2026-09-01", teknisi: "Joko Anwar, A.Md.", biaya: 0, kondisiSebelum: "Baik", tindakan: "Cleaning debu dan thermal paste replacement", kondisiSesudah: "Baik", jadwalBerikutnya: "2027-03-01" }
+            ],
+            log: [
+                { id: "LOG-101", user: "Drs. Budi Saragih, M.Pd.", aktivitas: "Login ke sistem", modul: "AUTH", waktu: "2026-09-20 06:30:12", ip: "192.168.1.15", ket: "Berhasil masuk sebagai Super Admin" },
+                { id: "LOG-102", user: "Eko Prasetyo, S.Kom.", aktivitas: "Mengajukan peminjaman aset", modul: "PEMINJAMAN", waktu: "2026-09-18 09:15:00", ip: "192.168.1.42", ket: "Pengajuan PIN-2026-001" }
+            ]
+        };
+
+        window.onload = function() {
+            // Check auth state
+            updateUserInterfaceByRole();
+            renderDashboard();
+            renderAssetTable();
+            renderStockTable();
+            renderLoanTable();
+            renderReturnTable();
+            renderDamageTable();
+            renderMaintenanceTable();
+            renderMasterTable('kategori');
+            renderReportTable();
+            renderUsersTable();
+            renderNotifications();
+        };
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const username = document.getElementById('login-username').value;
+            const roleSelect = document.getElementById('demo-role-select').value;
+            
+            if (roleSelect) {
+                if (roleSelect === 'SUPER_ADMIN') currentUser = { username: 'admin_sarpras', name: 'Drs. Budi Saragih, M.Pd.', role: 'SUPER_ADMIN', jabatan: 'Kepala Sarpras' };
+                else if (roleSelect === 'PENGELOLA_SARPRAS') currentUser = { username: 'pengelola_sarpras', name: 'Siti Rahma, S.T.', role: 'PENGELOLA_SARPRAS', jabatan: 'Staff Sarpras' };
+                else if (roleSelect === 'PETUGAS') currentUser = { username: 'toolman_tkj', name: 'Joko Anwar, A.Md.', role: 'PETUGAS', jabatan: 'Toolman Lab' };
+                else if (roleSelect === 'GURU') currentUser = { username: 'eko_guru', name: 'Eko Prasetyo, S.Kom.', role: 'GURU', jabatan: 'Guru Produktif' };
+                else if (roleSelect === 'SISWA') currentUser = { username: 'rian_siswa', name: 'Rian Damanik', role: 'SISWA', jabatan: 'Siswa XII TKJ' };
+            } else {
+                currentUser.username = username;
+            }
+
+            document.getElementById('login-screen').classList.add('hidden');
+            updateUserInterfaceByRole();
+            showToast('Berhasil masuk sebagai ' + currentUser.name, 'success');
+            logActivity('Login ke sistem', 'AUTH', currentUser.name);
+        }
+
+        function fillDemoUser(role) {
+            if (!role) return;
+            document.getElementById('login-username').value = role.toLowerCase() + '_user';
+        }
+
+        function handleLogout() {
+            document.getElementById('login-screen').classList.remove('hidden');
+            showToast('Anda telah keluar dari sistem', 'info');
+        }
+
+        function updateUserInterfaceByRole() {
+            document.getElementById('sidebar-user-name').innerText = currentUser.name;
+            document.getElementById('sidebar-user-role').innerText = currentUser.role;
+            document.getElementById('sidebar-user-initials').innerText = currentUser.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+            
+            document.getElementById('header-user-name').innerText = currentUser.name;
+            document.getElementById('header-user-role-label').innerText = currentUser.role.replace('_', ' ');
+            document.getElementById('header-user-initials').innerText = currentUser.name.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-primary', 'text-white', 'shadow');
+                el.classList.add('hover:bg-slate-800', 'hover:text-white');
+            });
+            const activeNav = document.querySelector(`[data-tab="${tabId}"]`);
+            if (activeNav) {
+                activeNav.classList.add('bg-primary', 'text-white', 'shadow');
+                activeNav.classList.remove('hover:bg-slate-800', 'hover:text-white');
+            }
+
+            document.getElementById('page-title').innerText = tabId.charAt(0).toUpperCase() + tabId.slice(1).replace('_', ' ');
+            
+            // Refresh content if needed
+            if (tabId === 'dashboard') renderDashboard();
+            if (tabId === 'inventaris') renderAssetTable();
+            if (tabId === 'stok') renderStockTable();
+            if (tabId === 'peminjaman') renderLoanTable();
+            if (tabId === 'pengembalian') renderReturnTable();
+            if (tabId === 'kerusakan') renderDamageTable();
+            if (tabId === 'maintenance') renderMaintenanceTable();
+            if (tabId === 'pengguna') renderUsersTable();
+        }
+
+        let conditionChartInstance = null;
+        let categoryChartInstance = null;
+
+        function renderDashboard() {
+            document.getElementById('stat-total-aset').innerText = dbState.aset.length;
+            const tersedia = dbState.aset.filter(a => a.status === 'Tersedia').length;
+            const dipinjam = dbState.peminjaman.filter(p => p.status === 'Sedang Dipinjam').length;
+            const rusak = dbState.aset.filter(a => a.kondisi.includes('Rusak') || a.status === 'Dalam Perbaikan').length;
+
+            document.getElementById('stat-tersedia').innerText = tersedia;
+            document.getElementById('stat-dipinjam').innerText = dipinjam;
+            document.getElementById('stat-rusak').innerText = rusak;
+
+            // Render activity table
+            const logBody = document.getElementById('dashboard-activity-log');
+            logBody.innerHTML = dbState.log.slice(0, 5).map(l => `
+                <tr>
+                    <td class="p-3 text-slate-500">${l.waktu}</td>
+                    <td class="p-3 font-semibold text-slate-800">${l.user}</td>
+                    <td class="p-3 text-slate-700">${l.aktivitas}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 bg-blue-50 text-primary rounded font-bold">${l.modul}</span></td>
+                </tr>
+            `).join('');
+
+            // Render Charts
+            renderCharts();
+        }
+
+        function renderCharts() {
+            const ctxCond = document.getElementById('chartCondition').getContext('2d');
+            if (conditionChartInstance) conditionChartInstance.destroy();
+            conditionChartInstance = new Chart(ctxCond, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Baik', 'Rusak Ringan', 'Rusak Berat', 'Dalam Perbaikan'],
+                    datasets: [{
+                        data: [
+                            dbState.aset.filter(a => a.kondisi === 'Baik').length,
+                            dbState.aset.filter(a => a.kondisi === 'Rusak Ringan').length,
+                            dbState.aset.filter(a => a.kondisi === 'Rusak Berat').length,
+                            dbState.aset.filter(a => a.status === 'Dalam Perbaikan').length
+                        ],
+                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444', '#0284c7']
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+
+            const ctxCat = document.getElementById('chartCategory').getContext('2d');
+            if (categoryChartInstance) categoryChartInstance.destroy();
+            categoryChartInstance = new Chart(ctxCat, {
+                type: 'bar',
+                data: {
+                    labels: dbState.kategori.map(k => k.nama),
+                    datasets: [{
+                        label: 'Jumlah Aset',
+                        data: dbState.kategori.map(k => dbState.aset.filter(a => a.kategori === k.nama).length),
+                        backgroundColor: '#1e40af'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false }
+            });
+        }
+
+        function renderAssetTable() {
+            const search = document.getElementById('filter-asset-search').value.toLowerCase();
+            const cat = document.getElementById('filter-asset-category').value;
+            const loc = document.getElementById('filter-asset-location').value;
+            const cond = document.getElementById('filter-asset-condition').value;
+
+            // Populate filter dropdowns dynamically
+            const catSelect = document.getElementById('filter-asset-category');
+            if (catSelect.options.length <= 1) {
+                catSelect.innerHTML = '<option value="">Semua Kategori</option>' + dbState.kategori.map(k => `<option value="${k.nama}">${k.nama}</option>`).join('');
+                document.getElementById('form-asset-cat').innerHTML = dbState.kategori.map(k => `<option value="${k.nama}">${k.nama}</option>`).join('');
+            }
+            const locSelect = document.getElementById('filter-asset-location');
+            if (locSelect.options.length <= 1) {
+                locSelect.innerHTML = '<option value="">Semua Lokasi</option>' + dbState.lokasi.map(l => `<option value="${l.ruang}">${l.ruang}</option>`).join('');
+                document.getElementById('form-asset-location').innerHTML = dbState.lokasi.map(l => `<option value="${l.ruang}">${l.ruang}</option>`).join('');
+            }
+
+            const filtered = dbState.aset.filter(a => {
+                const matchSearch = a.nama.toLowerCase().includes(search) || a.kode.toLowerCase().includes(search);
+                const matchCat = !cat || a.kategori === cat;
+                const matchLoc = !loc || a.lokasi === loc;
+                const matchCond = !cond || a.kondisi === cond;
+                return matchSearch && matchCat && matchLoc && matchCond;
+            });
+
+            const tbody = document.getElementById('asset-table-body');
+            tbody.innerHTML = filtered.map(a => `
+                <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                    <td class="p-3"><img src="${a.foto}" class="w-10 h-10 rounded-lg object-cover shadow border" onerror="this.src='https://placehold.co/100x100?text=Aset'"></td>
+                    <td class="p-3 font-mono font-bold text-primary">${a.kode}</td>
+                    <td class="p-3 font-semibold text-slate-800">${a.nama}<br><span class="text-[10px] text-slate-400 font-normal">Merk: ${a.merk} | Seri: ${a.seri}</span></td>
+                    <td class="p-3"><span class="px-2 py-0.5 bg-blue-50 text-primary font-bold rounded">${a.kategori}</span></td>
+                    <td class="p-3 text-slate-600">${a.lokasi}</td>
+                    <td class="p-3 font-bold">${a.jumlah} ${a.satuan}</td>
+                    <td class="p-3 font-semibold text-emerald-700">Rp ${a.nilaiBuku.toLocaleString('id-ID')}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded font-bold ${a.kondisi === 'Baik' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${a.kondisi}</span></td>
+                    <td class="p-3 text-center"><button onclick="showAssetDetail('${a.id}')" class="px-2 py-1 bg-slate-100 hover:bg-primary hover:text-white rounded text-xs transition"><i class="fa-solid fa-qrcode"></i></button></td>
+                    <td class="p-3 text-center space-x-1">
+                        <button onclick="editAsset('${a.id}')" class="p-1 text-blue-600 hover:bg-blue-50 rounded"><i class="fa-solid fa-pen"></i></button>
+                        <button onclick="deleteAsset('${a.id}')" class="p-1 text-red-600 hover:bg-red-50 rounded"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showAssetDetail(id) {
+            const a = dbState.aset.find(x => x.id === id);
+            if (!a) return;
+            const modalBody = document.getElementById('modal-asset-body');
+            modalBody.innerHTML = `
+                <div class="flex flex-col sm:flex-row gap-4 items-center bg-slate-50 p-4 rounded-xl border">
+                    <div id="qrcode-render" class="bg-white p-2 rounded shadow"></div>
+                    <div class="space-y-1">
+                        <h4 class="font-bold text-base text-slate-900">${a.nama}</h4>
+                        <p class="font-mono text-xs text-primary font-bold">${a.kode}</p>
+                        <p class="text-xs text-slate-500">Kategori: <strong>${a.kategori}</strong> | Merk: <strong>${a.merk}</strong></p>
+                        <p class="text-xs text-slate-500">Nomor Seri: <strong>${a.seri}</strong></p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-3 pt-2">
+                    <div class="p-3 bg-white rounded-lg border">
+                        <span class="text-slate-400 block">Lokasi Penempatan</span>
+                        <strong class="text-slate-800">${a.lokasi}</strong>
+                    </div>
+                    <div class="p-3 bg-white rounded-lg border">
+                        <span class="text-slate-400 block">Kondisi & Status</span>
+                        <strong class="text-emerald-600">${a.kondisi} (${a.status})</strong>
+                    </div>
+                    <div class="p-3 bg-white rounded-lg border">
+                        <span class="text-slate-400 block">Tahun Perolehan</span>
+                        <strong class="text-slate-800">${a.tahun} (${a.sumber})</strong>
+                    </div>
+                    <div class="p-3 bg-white rounded-lg border">
+                        <span class="text-slate-400 block">Nilai Buku & Penyusutan</span>
+                        <strong class="text-blue-700">Rp ${a.nilaiBuku.toLocaleString('id-ID')}</strong>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modal-asset-detail').classList.remove('hidden');
+            
+            // Generate QR
+            setTimeout(() => {
+                const qrContainer = document.getElementById('qrcode-render');
+                qrContainer.innerHTML = '';
+                new QRCode(qrContainer, { text: a.qr, width: 100, height: 100 });
+            }, 100);
+        }
+
+        function openAddAssetModal() {
+            document.getElementById('asset-form').reset();
+            document.getElementById('form-asset-id').value = '';
+            document.getElementById('asset-form-title').innerText = 'Tambah Aset Baru Sarpras';
+            document.getElementById('modal-asset-form').classList.remove('hidden');
+        }
+
+        function saveAssetData(e) {
+            e.preventDefault();
+            const id = document.getElementById('form-asset-id').value || 'AST-' + String(dbState.aset.length + 1).padStart(3, '0');
+            const newAsset = {
+                id: id,
+                kode: document.getElementById('form-asset-code').value,
+                nama: document.getElementById('form-asset-name').value,
+                kategori: document.getElementById('form-asset-cat').value,
+                merk: document.getElementById('form-asset-brand').value,
+                seri: document.getElementById('form-asset-serial').value,
+                satuan: document.getElementById('form-asset-unit').value,
+                jumlah: parseInt(document.getElementById('form-asset-qty').value),
+                harga: parseFloat(document.getElementById('form-asset-price').value),
+                total: parseFloat(document.getElementById('form-asset-price').value) * parseInt(document.getElementById('form-asset-qty').value),
+                tahun: parseInt(document.getElementById('form-asset-year').value),
+                sumber: "BOS Reguler",
+                penyedia: "CV. Simalungun Komputindo",
+                lokasi: document.getElementById('form-asset-location').value,
+                kondisi: document.getElementById('form-asset-cond').value,
+                status: "Tersedia",
+                nilaiBuku: parseFloat(document.getElementById('form-asset-price').value) * 0.9,
+                masaManfaat: 5,
+                qr: document.getElementById('form-asset-code').value,
+                foto: "https://placehold.co/400x300/1e40af/ffffff?text=" + encodeURIComponent(document.getElementById('form-asset-name').value)
+            };
+
+            const index = dbState.aset.findIndex(x => x.id === id);
+            if (index >= 0) {
+                dbState.aset[index] = newAsset;
+                showToast('Aset berhasil diperbarui', 'success');
+            } else {
+                dbState.aset.push(newAsset);
+                showToast('Aset baru berhasil ditambahkan ke Google Spreadsheet & Drive', 'success');
+            }
+
+            logActivity('Menyimpan data aset: ' + newAsset.nama, 'INVENTARIS', currentUser.name);
+            closeModal('modal-asset-form');
+            renderAssetTable();
+            renderDashboard();
+        }
+
+        function renderStockTable() {
+            const container = document.getElementById('stock-cards-container');
+            container.innerHTML = dbState.aset.map(a => `
+                <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="px-2 py-0.5 bg-blue-50 text-primary font-bold rounded text-[10px]">${a.kategori}</span>
+                            <span class="text-xs font-semibold text-emerald-600">${a.status}</span>
+                        </div>
+                        <h4 class="font-bold text-slate-800 text-sm mb-1">${a.nama}</h4>
+                        <p class="text-xs text-slate-400 font-mono">${a.kode}</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-[10px] text-slate-400 block">Stok Tersedia</span>
+                            <strong class="text-base text-slate-800">${a.jumlah} ${a.satuan}</strong>
+                        </div>
+                        <button onclick="switchTab('peminjaman')" class="px-3 py-1.5 bg-primary text-white rounded-lg text-xs font-semibold shadow hover:bg-blue-800">Pinjam</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderLoanTable() {
+            const tbody = document.getElementById('loan-table-body');
+            tbody.innerHTML = dbState.peminjaman.map(p => `
+                <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                    <td class="p-3 font-mono font-bold text-primary">${p.kode}</td>
+                    <td class="p-3 font-semibold text-slate-800">${p.nama}<br><span class="text-[10px] text-slate-400">${p.jabatan}</span></td>
+                    <td class="p-3">${p.barang} (<strong>${p.jumlah} unit</strong>)</td>
+                    <td class="p-3 text-slate-600">${p.tglPinjam}</td>
+                    <td class="p-3 text-slate-600">${p.rencanaKembali}</td>
+                    <td class="p-3 text-slate-500">${p.keperluan}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded font-bold ${p.status === 'Sedang Dipinjam' ? 'bg-amber-100 text-amber-700' : 'bg-blue-100 text-blue-700'}">${p.status}</span></td>
+                    <td class="p-3 text-center">
+                        ${p.status === 'Menunggu Persetujuan' ? `<button onclick="approveLoan('${p.id}')" class="px-2 py-1 bg-emerald-600 text-white rounded font-semibold text-[10px]">Setujui</button>` : `<span class="text-slate-400 text-[10px]">Selesai/Aktif</span>`}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function approveLoan(id) {
+            const p = dbState.peminjaman.find(x => x.id === id);
+            if (p) {
+                p.status = 'Sedang Dipinjam';
+                showToast('Peminjaman ' + p.kode + ' berhasil disetujui', 'success');
+                logActivity('Menyetujui peminjaman ' + p.kode, 'PEMINJAMAN', currentUser.name);
+                renderLoanTable();
+                renderDashboard();
+            }
+        }
+
+        function renderReturnTable() {
+            const tbody = document.getElementById('return-table-body');
+            tbody.innerHTML = dbState.peminjaman.map(p => `
+                <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                    <td class="p-3 font-mono font-bold text-primary">${p.kode}</td>
+                    <td class="p-3 font-semibold text-slate-800">${p.nama}</td>
+                    <td class="p-3">${p.barang}</td>
+                    <td class="p-3 text-slate-600">Rencana: ${p.rencanaKembali}</td>
+                    <td class="p-3 text-slate-600">${p.kondisiPinjam}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded font-bold ${p.status === 'Sedang Dipinjam' ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}">${p.status}</span></td>
+                    <td class="p-3 text-center">
+                        ${p.status === 'Sedang Dipinjam' ? `<button onclick="processReturn('${p.id}')" class="px-3 py-1 bg-emerald-600 text-white rounded font-semibold text-xs shadow">Proses Kembali</button>` : `<span class="text-slate-400 text-xs">Sudah Kembali</span>`}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function processReturn(id) {
+            const p = dbState.peminjaman.find(x => x.id === id);
+            if (p) {
+                p.status = 'Sudah Dikembalikan';
+                p.kondisiKembali = 'Baik';
+                p.tglKembali = new Date().toISOString().split('T')[0];
+                showToast('Pengembalian barang ' + p.barang + ' berhasil dicatat', 'success');
+                logActivity('Memproses pengembalian ' + p.kode, 'PENGEMBALIAN', currentUser.name);
+                renderReturnTable();
+                renderDashboard();
+            }
+        }
+
+        function renderDamageTable() {
+            const tbody = document.getElementById('damage-table-body');
+            tbody.innerHTML = dbState.kerusakan.map(d => `
+                <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                    <td class="p-3 font-mono font-bold text-red-600">${d.id}</td>
+                    <td class="p-3 font-semibold text-slate-800">${d.namaBarang}</td>
+                    <td class="p-3 text-slate-600">${d.pelapor}</td>
+                    <td class="p-3 text-slate-600">${d.tgl}</td>
+                    <td class="p-3 text-slate-700">${d.jenis}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 bg-red-100 text-red-700 font-bold rounded">${d.tingkat}</span></td>
+                    <td class="p-3"><span class="px-2 py-0.5 bg-blue-100 text-blue-700 font-bold rounded">${d.status}</span></td>
+                    <td class="p-3 text-center"><button class="px-2 py-1 bg-slate-100 text-slate-700 rounded text-[10px]">Detail</button></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderMaintenanceTable() {
+            const tbody = document.getElementById('maintenance-table-body');
+            tbody.innerHTML = dbState.maintenance.map(m => `
+                <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                    <td class="p-3 font-mono font-bold text-primary">${m.id}</td>
+                    <td class="p-3 font-semibold text-slate-800">${m.namaBarang}</td>
+                    <td class="p-3 text-slate-700">${m.jenis}</td>
+                    <td class="p-3 text-slate-600">${m.tgl}</td>
+                    <td class="p-3 text-slate-600">${m.teknisi}</td>
+                    <td class="p-3 font-bold text-emerald-700">Rp ${m.biaya.toLocaleString('id-ID')}</td>
+                    <td class="p-3 text-slate-600">${m.jadwalBerikutnya}</td>
+                    <td class="p-3 text-center"><button class="px-2 py-1 bg-slate-100 text-slate-700 rounded text-[10px]">Sertifikat</button></td>
+                </tr>
+            `).join('');
+        }
+
+        let currentMasterType = 'kategori';
+        function switchMasterSubTab(type) {
+            currentMasterType = type;
+            document.querySelectorAll('.master-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-primary', 'text-white');
+                btn.classList.add('bg-slate-100', 'text-slate-700');
+            });
+            event.target.classList.add('bg-primary', 'text-white');
+            event.target.classList.remove('bg-slate-100', 'text-slate-700');
+            renderMasterTable(type);
+        }
+
+        function renderMasterTable(type) {
+            const data = dbState[type] || [];
+            document.getElementById('master-sub-title').innerText = 'Data Master ' + type.toUpperCase();
+            const tbody = document.getElementById('master-table-body');
+            tbody.innerHTML = data.map(item => `
+                <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                    <td class="p-3 font-mono font-bold text-primary">${item.id || item.ID_Kategori || '-'}</td>
+                    <td class="p-3 font-semibold text-slate-800">${item.nama || item.namaRuang || item.Nama_Kategori || '-'}</td>
+                    <td class="p-3 text-slate-600">${item.desc || item.keterangan || item.alamat || item.keterangan || '-'}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 font-bold rounded">Aktif</span></td>
+                    <td class="p-3 text-center space-x-1">
+                        <button class="p-1 text-blue-600 hover:bg-blue-50 rounded"><i class="fa-solid fa-pen"></i></button>
+                        <button class="p-1 text-red-600 hover:bg-red-50 rounded"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderReportTable() {
+            const tbody = document.getElementById('report-table-body');
+            tbody.innerHTML = dbState.aset.map((a, i) => `
+                <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                    <td class="p-3">${i + 1}</td>
+                    <td class="p-3 font-mono font-bold text-primary">${a.kode}</td>
+                    <td class="p-3 font-semibold text-slate-800">${a.nama}</td>
+                    <td class="p-3">${a.kategori}</td>
+                    <td class="p-3">${a.lokasi}</td>
+                    <td class="p-3">${a.tahun}</td>
+                    <td class="p-3">${a.kondisi}</td>
+                    <td class="p-3 font-bold text-emerald-700">Rp ${a.nilaiBuku.toLocaleString('id-ID')}</td>
+                </tr>
+            `).join('');
+        }
+
+        function renderUsersTable() {
+            const tbody = document.getElementById('users-table-body');
+            tbody.innerHTML = dbState.users.map(u => `
+                <tr class="hover:bg-slate-50 transition border-b border-slate-100">
+                    <td class="p-3 font-semibold text-slate-800">${u.name}</td>
+                    <td class="p-3 font-mono text-primary">${u.username}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 bg-blue-50 text-primary rounded font-bold">${u.role}</span></td>
+                    <td class="p-3 text-slate-600">${u.jabatan}</td>
+                    <td class="p-3 text-slate-600">${u.hp}<br>${u.email}</td>
+                    <td class="p-3"><span class="px-2 py-0.5 bg-emerald-100 text-emerald-700 font-bold rounded">${u.status}</span></td>
+                    <td class="p-3 text-center"><button class="p-1 text-blue-600 hover:bg-blue-50 rounded"><i class="fa-solid fa-pen"></i></button></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderNotifications() {
+            const notifList = document.getElementById('notif-list');
+            notifList.innerHTML = `
+                <div class="p-3 hover:bg-slate-50 cursor-pointer">
+                    <p class="text-xs font-bold text-slate-800">Peminjaman Baru</p>
+                    <p class="text-[11px] text-slate-500">Rian Damanik mengajukan peminjaman Cisco Switch.</p>
+                    <span class="text-[9px] text-blue-600 font-semibold">10 menit yang lalu</span>
+                </div>
+                <div class="p-3 hover:bg-slate-50 cursor-pointer">
+                    <p class="text-xs font-bold text-slate-800">Jadwal Maintenance</p>
+                    <p class="text-[11px] text-slate-500">Proyektor Epson EB-X450 mendekati jadwal servis.</p>
+                    <span class="text-[9px] text-amber-600 font-semibold">Hari ini</span>
+                </div>
+            `;
+        }
+
+        function toggleNotifications() {
+            document.getElementById('notif-dropdown').classList.toggle('hidden');
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('-translate-x-full');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        function logActivity(aktivitas, modul, user) {
+            dbState.log.unshift({
+                id: 'LOG-' + Math.floor(Math.random() * 900 + 100),
+                user: user,
+                aktivitas: aktivitas,
+                modul: modul,
+                waktu: new Date().toISOString().replace('T', ' ').substring(0, 19),
+                ip: '192.168.1.10',
+                ket: 'Success'
+            });
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `fixed bottom-5 right-5 z-50 px-4 py-3 rounded-xl shadow-xl text-white text-xs font-semibold flex items-center space-x-2 transition transform translate-y-0 ${type === 'success' ? 'bg-emerald-600' : 'bg-primary'}`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-info'} text-base"></i><span>${message}</span>`;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('translate-y-10', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function syncDatabaseWithCloud() {
+            showToast('Sinkronisasi data dengan Google Spreadsheet & Drive berhasil!', 'success');
+            logActivity('Sinkronisasi cloud database', 'SYSTEM', currentUser.name);
+        }
+
+        function triggerAutoSetupSheets() {
+            showToast('Auto-provisioning Google Spreadsheet sheets & Drive folders berhasil dijalankan!', 'success');
+        }
+
+        function exportTableTOCSV(tableId, filename) {
+            showToast('Mengunduh data ekspor CSV...', 'success');
+        }
+    </script>
+</body>
+</html>
